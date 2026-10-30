@@ -4,10 +4,14 @@
     return c ? c.split('=')[1] : '';
   }
   var me = ck('ds_user_id'), csrf = ck('csrftoken');
+  var claim = '';
+  try { claim = window.sessionStorage && (sessionStorage.getItem('www-claim-v2') || '') || ''; } catch (e) {}
   var H = {
     'x-ig-app-id': '936619743392459',
     'x-csrftoken': csrf,
-    'x-requested-with': 'XMLHttpRequest'
+    'x-requested-with': 'XMLHttpRequest',
+    'x-asbd-id': '359341',
+    'x-ig-www-claim': claim || '0'
   };
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
@@ -37,7 +41,7 @@
     '#ig-unfollow-ui .msg{color:#aeaeb2;margin-bottom:14px;min-height:1.4em}',
     '#ig-unfollow-ui .list{display:flex;flex-direction:column;gap:8px}',
     '#ig-unfollow-ui .row{display:flex;align-items:center;gap:12px;background:#16161c;border:1px solid #2a2a32;border-radius:12px;padding:10px 12px}',
-    '#ig-unfollow-ui .av{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#2a2a32;flex-shrink:0}',
+    '#ig-unfollow-ui .av{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#2a2a32 center/cover no-repeat;flex-shrink:0;overflow:hidden}',
     '#ig-unfollow-ui .meta{flex:1;min-width:0}',
     '#ig-unfollow-ui .uname{display:flex;align-items:center;gap:6px;flex-wrap:wrap}',
     '#ig-unfollow-ui .uname a{color:#fff;text-decoration:none;font-weight:700}',
@@ -112,7 +116,14 @@
   }
 
   function picUrl(u) {
-    return u.profile_pic_url_hd || u.profile_pic_url || u.hd_profile_pic_url_info && u.hd_profile_pic_url_info.url || '';
+    var url = (u && (u.profile_pic_url_hd || u.profile_pic_url)) || '';
+    if (!url && u && u.hd_profile_pic_url_info) url = u.hd_profile_pic_url_info.url || '';
+    if (!url && u && u.hd_profile_pic_versions && u.hd_profile_pic_versions.length)
+      url = u.hd_profile_pic_versions[u.hd_profile_pic_versions.length - 1].url || '';
+    if (typeof url === 'string') {
+      url = url.replace(/\u0026/g, '&').replace(/&amp;/g, '&').replace(/^http:\/\//i, 'https://');
+    }
+    return url || '';
   }
 
   function addRow(u) {
@@ -126,38 +137,70 @@
     if (verified) badges += '<span class="badge ver" title="Onaylı">✓ Onaylı</span>';
     if (priv) badges += '<span class="badge lock" title="Gizli hesap">🔒 Gizli</span>';
 
+    var avEl = document.createElement('div');
+    avEl.className = 'av';
     var img = document.createElement('img');
-    img.className = 'av';
     img.alt = '';
-    img.decoding = 'async';
+    img.width = 44;
+    img.height = 44;
+    img.style.width = '44px';
+    img.style.height = '44px';
+    img.style.borderRadius = '50%';
+    img.style.objectFit = 'cover';
+    img.style.display = 'block';
     img.src = placeholderAv(u.username);
+    avEl.appendChild(img);
 
-    function loadPic(url) {
+    function tryBg(url, noref) {
       return new Promise(function (resolve) {
         if (!url) return resolve(false);
         var done = false;
         function finish(ok) { if (done) return; done = true; resolve(ok); }
-        img.onload = function () { finish(true); };
-        img.onerror = function () { finish(false); };
-        img.referrerPolicy = 'no-referrer';
-        img.src = url;
+        var probe = new Image();
+        probe.onload = function () {
+          img.onload = null;
+          img.onerror = null;
+          if (noref) img.referrerPolicy = 'no-referrer';
+          else img.removeAttribute('referrerpolicy');
+          img.src = url;
+          avEl.style.backgroundImage = 'none';
+          finish(true);
+        };
+        probe.onerror = function () { finish(false); };
+        if (noref) probe.referrerPolicy = 'no-referrer';
+        probe.src = url;
       });
+    }
+
+    async function refreshUserPic() {
+      try {
+        var rr = await fetch('/api/v1/users/' + u.pk + '/info/', { headers: H, credentials: 'include' });
+        if (rr.ok) {
+          var jj = await rr.json();
+          var uu = jj.user || jj;
+          var url = picUrl(uu);
+          if (url) { u.profile_pic_url = url; return url; }
+        }
+      } catch (e) {}
+      try {
+        var rr2 = await fetch('/api/v1/users/web_profile_info/?username=' + encodeURIComponent(u.username), { headers: H, credentials: 'include' });
+        if (rr2.ok) {
+          var jj2 = await rr2.json();
+          var uu2 = (jj2.data && jj2.data.user) || jj2.user || {};
+          var url2 = picUrl(uu2);
+          if (url2) { u.profile_pic_url = url2; return url2; }
+        }
+      } catch (e) {}
+      return '';
     }
 
     (async function () {
       var url = av;
-      if (!await loadPic(url)) {
-        try {
-          var rr = await fetch('/api/v1/users/' + u.pk + '/info/', { headers: H, credentials: 'include' });
-          if (rr.ok) {
-            var jj = await rr.json();
-            var uu = jj.user || jj;
-            url = picUrl(uu);
-            if (url) u.profile_pic_url = url;
-          }
-        } catch (e) {}
-        if (!await loadPic(url)) img.src = placeholderAv(u.username);
-      }
+      if (await tryBg(url, false)) return;
+      if (await tryBg(url, true)) return;
+      url = await refreshUserPic() || url;
+      if (await tryBg(url, false)) return;
+      if (await tryBg(url, true)) return;
     })();
 
     var meta = document.createElement('div');
@@ -174,7 +217,7 @@
     btn.type = 'button';
     btn.textContent = 'Takibi bırak';
 
-    row.appendChild(img);
+    row.appendChild(avEl);
     row.appendChild(meta);
     row.appendChild(btn);
     btn.onclick = async function () {

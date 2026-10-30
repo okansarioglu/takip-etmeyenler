@@ -46,10 +46,14 @@ footer{border-top:1px solid #222;margin-top:60px;padding:30px 0;text-align:cente
     return c ? c.split(&#x27;=&#x27;)[1] : &#x27;&#x27;;
   }
   var me = ck(&#x27;ds_user_id&#x27;), csrf = ck(&#x27;csrftoken&#x27;);
+  var claim = &#x27;&#x27;;
+  try { claim = window.sessionStorage &amp;&amp; (sessionStorage.getItem(&#x27;www-claim-v2&#x27;) || &#x27;&#x27;) || &#x27;&#x27;; } catch (e) {}
   var H = {
     &#x27;x-ig-app-id&#x27;: &#x27;936619743392459&#x27;,
     &#x27;x-csrftoken&#x27;: csrf,
-    &#x27;x-requested-with&#x27;: &#x27;XMLHttpRequest&#x27;
+    &#x27;x-requested-with&#x27;: &#x27;XMLHttpRequest&#x27;,
+    &#x27;x-asbd-id&#x27;: &#x27;359341&#x27;,
+    &#x27;x-ig-www-claim&#x27;: claim || &#x27;0&#x27;
   };
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
@@ -79,7 +83,7 @@ footer{border-top:1px solid #222;margin-top:60px;padding:30px 0;text-align:cente
     &#x27;#ig-unfollow-ui .msg{color:#aeaeb2;margin-bottom:14px;min-height:1.4em}&#x27;,
     &#x27;#ig-unfollow-ui .list{display:flex;flex-direction:column;gap:8px}&#x27;,
     &#x27;#ig-unfollow-ui .row{display:flex;align-items:center;gap:12px;background:#16161c;border:1px solid #2a2a32;border-radius:12px;padding:10px 12px}&#x27;,
-    &#x27;#ig-unfollow-ui .av{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#2a2a32;flex-shrink:0}&#x27;,
+    &#x27;#ig-unfollow-ui .av{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#2a2a32 center/cover no-repeat;flex-shrink:0;overflow:hidden}&#x27;,
     &#x27;#ig-unfollow-ui .meta{flex:1;min-width:0}&#x27;,
     &#x27;#ig-unfollow-ui .uname{display:flex;align-items:center;gap:6px;flex-wrap:wrap}&#x27;,
     &#x27;#ig-unfollow-ui .uname a{color:#fff;text-decoration:none;font-weight:700}&#x27;,
@@ -154,7 +158,14 @@ footer{border-top:1px solid #222;margin-top:60px;padding:30px 0;text-align:cente
   }
 
   function picUrl(u) {
-    return u.profile_pic_url_hd || u.profile_pic_url || u.hd_profile_pic_url_info &amp;&amp; u.hd_profile_pic_url_info.url || &#x27;&#x27;;
+    var url = (u &amp;&amp; (u.profile_pic_url_hd || u.profile_pic_url)) || &#x27;&#x27;;
+    if (!url &amp;&amp; u &amp;&amp; u.hd_profile_pic_url_info) url = u.hd_profile_pic_url_info.url || &#x27;&#x27;;
+    if (!url &amp;&amp; u &amp;&amp; u.hd_profile_pic_versions &amp;&amp; u.hd_profile_pic_versions.length)
+      url = u.hd_profile_pic_versions[u.hd_profile_pic_versions.length - 1].url || &#x27;&#x27;;
+    if (typeof url === &#x27;string&#x27;) {
+      url = url.replace(/\u0026/g, &#x27;&amp;&#x27;).replace(/&amp;amp;/g, &#x27;&amp;&#x27;).replace(/^http:\/\//i, &#x27;https://&#x27;);
+    }
+    return url || &#x27;&#x27;;
   }
 
   function addRow(u) {
@@ -168,38 +179,70 @@ footer{border-top:1px solid #222;margin-top:60px;padding:30px 0;text-align:cente
     if (verified) badges += &#x27;&lt;span class=&quot;badge ver&quot; title=&quot;Onaylı&quot;&gt;✓ Onaylı&lt;/span&gt;&#x27;;
     if (priv) badges += &#x27;&lt;span class=&quot;badge lock&quot; title=&quot;Gizli hesap&quot;&gt;🔒 Gizli&lt;/span&gt;&#x27;;
 
+    var avEl = document.createElement(&#x27;div&#x27;);
+    avEl.className = &#x27;av&#x27;;
     var img = document.createElement(&#x27;img&#x27;);
-    img.className = &#x27;av&#x27;;
     img.alt = &#x27;&#x27;;
-    img.decoding = &#x27;async&#x27;;
+    img.width = 44;
+    img.height = 44;
+    img.style.width = &#x27;44px&#x27;;
+    img.style.height = &#x27;44px&#x27;;
+    img.style.borderRadius = &#x27;50%&#x27;;
+    img.style.objectFit = &#x27;cover&#x27;;
+    img.style.display = &#x27;block&#x27;;
     img.src = placeholderAv(u.username);
+    avEl.appendChild(img);
 
-    function loadPic(url) {
+    function tryBg(url, noref) {
       return new Promise(function (resolve) {
         if (!url) return resolve(false);
         var done = false;
         function finish(ok) { if (done) return; done = true; resolve(ok); }
-        img.onload = function () { finish(true); };
-        img.onerror = function () { finish(false); };
-        img.referrerPolicy = &#x27;no-referrer&#x27;;
-        img.src = url;
+        var probe = new Image();
+        probe.onload = function () {
+          img.onload = null;
+          img.onerror = null;
+          if (noref) img.referrerPolicy = &#x27;no-referrer&#x27;;
+          else img.removeAttribute(&#x27;referrerpolicy&#x27;);
+          img.src = url;
+          avEl.style.backgroundImage = &#x27;none&#x27;;
+          finish(true);
+        };
+        probe.onerror = function () { finish(false); };
+        if (noref) probe.referrerPolicy = &#x27;no-referrer&#x27;;
+        probe.src = url;
       });
+    }
+
+    async function refreshUserPic() {
+      try {
+        var rr = await fetch(&#x27;/api/v1/users/&#x27; + u.pk + &#x27;/info/&#x27;, { headers: H, credentials: &#x27;include&#x27; });
+        if (rr.ok) {
+          var jj = await rr.json();
+          var uu = jj.user || jj;
+          var url = picUrl(uu);
+          if (url) { u.profile_pic_url = url; return url; }
+        }
+      } catch (e) {}
+      try {
+        var rr2 = await fetch(&#x27;/api/v1/users/web_profile_info/?username=&#x27; + encodeURIComponent(u.username), { headers: H, credentials: &#x27;include&#x27; });
+        if (rr2.ok) {
+          var jj2 = await rr2.json();
+          var uu2 = (jj2.data &amp;&amp; jj2.data.user) || jj2.user || {};
+          var url2 = picUrl(uu2);
+          if (url2) { u.profile_pic_url = url2; return url2; }
+        }
+      } catch (e) {}
+      return &#x27;&#x27;;
     }
 
     (async function () {
       var url = av;
-      if (!await loadPic(url)) {
-        try {
-          var rr = await fetch(&#x27;/api/v1/users/&#x27; + u.pk + &#x27;/info/&#x27;, { headers: H, credentials: &#x27;include&#x27; });
-          if (rr.ok) {
-            var jj = await rr.json();
-            var uu = jj.user || jj;
-            url = picUrl(uu);
-            if (url) u.profile_pic_url = url;
-          }
-        } catch (e) {}
-        if (!await loadPic(url)) img.src = placeholderAv(u.username);
-      }
+      if (await tryBg(url, false)) return;
+      if (await tryBg(url, true)) return;
+      url = await refreshUserPic() || url;
+      if (await tryBg(url, false)) return;
+      if (await tryBg(url, true)) return;
     })();
 
     var meta = document.createElement(&#x27;div&#x27;);
@@ -216,7 +259,7 @@ footer{border-top:1px solid #222;margin-top:60px;padding:30px 0;text-align:cente
     btn.type = &#x27;button&#x27;;
     btn.textContent = &#x27;Takibi bırak&#x27;;
 
-    row.appendChild(img);
+    row.appendChild(avEl);
     row.appendChild(meta);
     row.appendChild(btn);
     btn.onclick = async function () {
