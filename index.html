@@ -1,0 +1,329 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Takip etmeyenler · okansariogluyt</title><meta name="description" content="Instagram'da seni geri takip etmeyenleri bul. Tarayıcı konsolu scripti.">
+<style>
+:root{--bg:#0b0b0f;--card:#16161c;--line:#2a2a32;--mut:#8e8e93;--a:#ff375f;--b:#ff9f0a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f5f5f7;font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+a{color:var(--b);text-decoration:none;font-weight:600}a:hover{text-decoration:underline}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px}
+.hero{padding:80px 0 50px;text-align:center;background:radial-gradient(600px 300px at 50% 0,rgba(255,55,95,.18),transparent)}
+.hero h1{font-size:clamp(38px,7vw,64px);margin:0;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:#c7c7cc;font-size:18px;margin:14px 0 26px}
+.pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--card);padding:8px 16px;border-radius:999px;color:#fff}
+.cta{display:inline-block;margin-top:28px;background:linear-gradient(90deg,var(--a),var(--b));color:#fff;padding:12px 24px;border-radius:12px}
+section{margin:44px 0}h2{font-size:26px;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.grid .card{padding:16px 18px}.grid b{display:block;margin-bottom:4px}
+.warn{border-color:rgba(255,159,10,.4);background:rgba(255,159,10,.07);margin-top:14px}
+ol{padding-left:0;list-style:none;counter-reset:s}ol li{counter-increment:s;position:relative;padding:14px 16px 14px 60px;margin-bottom:10px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+ol li:before{content:counter(s);position:absolute;left:16px;top:13px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));display:grid;place-items:center;font-weight:700}
+kbd,code.i{background:#222;border:1px solid #333;border-radius:6px;padding:1px 7px;font-family:ui-monospace,Menlo,monospace;font-size:14px;color:var(--b)}
+.codehead{display:flex;justify-content:space-between;align-items:center;background:#111;border:1px solid var(--line);border-bottom:0;border-radius:16px 16px 0 0;padding:12px 16px}
+.copy{background:linear-gradient(90deg,var(--a),var(--b));border:0;color:#fff;font-weight:700;font-size:15px;padding:10px 20px;border-radius:10px;cursor:pointer}
+.copy.ok{background:#30d158}
+pre{margin:0;max-height:460px;overflow:auto;background:#0f0f14;border:1px solid var(--line);border-radius:0 0 16px 16px;padding:18px;font:13px/1.5 ui-monospace,Menlo,monospace;color:#d1d1d6}
+footer{border-top:1px solid #222;margin-top:60px;padding:30px 0;text-align:center;color:var(--mut)}
+</style></head><body>
+<header class="hero"><div class="wrap"><h1>Takip etmeyenler</h1>
+<p>Instagram'da seni geri takip etmeyenleri saniyeler içinde bul, tek tıkla takibi bırak.</p>
+<div class="pills"><a class="pill" href="https://instagram.com/okansariogluyt" target="_blank" rel="noopener">Instagram · okansariogluyt</a><a class="pill" href="https://x.com/okansariogluyt" target="_blank" rel="noopener">Twitter / X · okansariogluyt</a></div>
+<a class="cta" href="#kod">Kodu al ↓</a></div></header>
+<main class="wrap">
+<section><h2>Ne işe yarar?</h2><div class="card">Bu script, takip ettiğin hesapları tek tek kontrol edip <b>seni geri takip etmeyenleri</b> listeler. Sadece <b>takip ettiklerini</b> tarar, takipçilerini indirmez; bu yüzden 100 bin+ takipçin olsa bile hızlı çalışır.</div>
+<div class="grid"><div class="card"><b>🖥️ Tam ekran panel</b>İlerleme çubuğu ve canlı sayaçlar.</div><div class="card"><b>🖼️ Profil fotoğrafları</b>Her hesap fotoğrafıyla listelenir.</div><div class="card"><b>✔️ Onay & 🔒 gizli</b>Onaylı ve gizli hesaplar rozetle gösterilir.</div><div class="card"><b>👋 Takibi bırak</b>Her satırda ayrı buton.</div><div class="card"><b>📋 Listeyi kopyala</b>Kullanıcı adlarını panoya al.</div></div>
+<div class="card warn">⚠️ <b>Uyarı:</b> Resmi bir Instagram aracı değildir. Limitlere takılmamak için içinde bekleme süreleri var, yine de çok sık çalıştırma. Hesabınla ilgili risk sana aittir. Kod sadece senin tarayıcında çalışır, hiçbir veri dışarı gönderilmez.</div></section>
+<section><h2>Nasıl kullanılır?</h2><ol>
+<li>Bilgisayardan <a href="https://www.instagram.com" target="_blank" rel="noopener">instagram.com</a>'u aç ve hesabına giriş yap.</li>
+<li>Sayfada boş bir yere sağ tıkla → <b>İncele</b> → üstten <b>Console</b> sekmesine geç. (Kısayol: <kbd>F12</kbd> veya <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>J</kbd>, Mac'te <kbd>⌘</kbd>+<kbd>⌥</kbd>+<kbd>J</kbd>)</li>
+<li>Aşağıdaki <b>Kodu kopyala</b> butonuna bas.</li>
+<li>Chrome yapıştırmana izin vermezse ("Don't paste code…" uyarısı), konsola elle <code class="i">allow pasting</code> yazıp <kbd>Enter</kbd>'a bas. Sonra tekrar yapıştır.</li>
+<li>Kodu konsola yapıştır (<kbd>Ctrl</kbd>+<kbd>V</kbd>) ve <kbd>Enter</kbd>'a bas.</li>
+<li>Panel açılır, tarama biter kadar bekle. <b>Sekmeyi kapatma.</b></li></ol></section>
+<section id="kod"><h2>Kod</h2><div class="codehead"><span style="color:var(--mut)">script.js</span><button class="copy" id="copy">📋 Kodu kopyala</button></div><pre><code id="code">;(async function () {
+  function ck(n) {
+    var c = document.cookie.split(&#x27;; &#x27;).find(function (x) { return x.indexOf(n + &#x27;=&#x27;) === 0; });
+    return c ? c.split(&#x27;=&#x27;)[1] : &#x27;&#x27;;
+  }
+  var me = ck(&#x27;ds_user_id&#x27;), csrf = ck(&#x27;csrftoken&#x27;);
+  var H = {
+    &#x27;x-ig-app-id&#x27;: &#x27;936619743392459&#x27;,
+    &#x27;x-csrftoken&#x27;: csrf,
+    &#x27;x-requested-with&#x27;: &#x27;XMLHttpRequest&#x27;
+  };
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  var old = document.getElementById(&#x27;ig-unfollow-ui&#x27;);
+  if (old) old.remove();
+
+  var ui = document.createElement(&#x27;div&#x27;);
+  ui.id = &#x27;ig-unfollow-ui&#x27;;
+  ui.innerHTML = [
+    &#x27;&lt;style&gt;&#x27;,
+    &#x27;#ig-unfollow-ui{position:fixed;inset:0;z-index:2147483647;background:#0b0b0f;color:#f5f5f7;font:15px/1.45 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column}&#x27;,
+    &#x27;#ig-unfollow-ui *{box-sizing:border-box}&#x27;,
+    &#x27;#ig-unfollow-ui .bar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:16px 22px;border-bottom:1px solid #222;background:#111}&#x27;,
+    &#x27;#ig-unfollow-ui .brand h1{margin:0;font-size:18px;font-weight:700;color:#ffffff}&#x27;,
+    &#x27;#ig-unfollow-ui .brand .ads{margin-top:6px;font-size:12px;color:#8e8e93;line-height:1.5}&#x27;,
+    &#x27;#ig-unfollow-ui .brand .ads a{color:#ff9f0a;text-decoration:none;font-weight:600}&#x27;,
+    &#x27;#ig-unfollow-ui .brand .ads a:hover{text-decoration:underline}&#x27;,
+    &#x27;#ig-unfollow-ui .x{background:transparent;border:0;color:#aaa;font-size:28px;cursor:pointer;line-height:1;padding:0 6px;flex-shrink:0}&#x27;,
+    &#x27;#ig-unfollow-ui .x:hover{color:#fff}&#x27;,
+    &#x27;#ig-unfollow-ui .body{flex:1;overflow:auto;padding:28px 24px 40px;max-width:760px;margin:0 auto;width:100%}&#x27;,
+    &#x27;#ig-unfollow-ui .stat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}&#x27;,
+    &#x27;#ig-unfollow-ui .card{background:#16161c;border:1px solid #2a2a32;border-radius:14px;padding:16px 18px}&#x27;,
+    &#x27;#ig-unfollow-ui .card .l{color:#8e8e93;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}&#x27;,
+    &#x27;#ig-unfollow-ui .card .v{font-size:28px;font-weight:700;color:#ffffff}&#x27;,
+    &#x27;#ig-unfollow-ui .prog{height:10px;background:#222;border-radius:999px;overflow:hidden;margin:8px 0 18px}&#x27;,
+    &#x27;#ig-unfollow-ui .prog &gt; i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff375f,#ff9f0a);transition:width .25s}&#x27;,
+    &#x27;#ig-unfollow-ui .msg{color:#aeaeb2;margin-bottom:14px;min-height:1.4em}&#x27;,
+    &#x27;#ig-unfollow-ui .list{display:flex;flex-direction:column;gap:8px}&#x27;,
+    &#x27;#ig-unfollow-ui .row{display:flex;align-items:center;gap:12px;background:#16161c;border:1px solid #2a2a32;border-radius:12px;padding:10px 12px}&#x27;,
+    &#x27;#ig-unfollow-ui .av{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#2a2a32;flex-shrink:0}&#x27;,
+    &#x27;#ig-unfollow-ui .meta{flex:1;min-width:0}&#x27;,
+    &#x27;#ig-unfollow-ui .uname{display:flex;align-items:center;gap:6px;flex-wrap:wrap}&#x27;,
+    &#x27;#ig-unfollow-ui .uname a{color:#fff;text-decoration:none;font-weight:700}&#x27;,
+    &#x27;#ig-unfollow-ui .uname a:hover{color:#ff9f0a}&#x27;,
+    &#x27;#ig-unfollow-ui .badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#8e8e93;background:#222;border-radius:999px;padding:2px 8px}&#x27;,
+    &#x27;#ig-unfollow-ui .badge.ver{color:#3897f0;background:rgba(56,151,240,.12)}&#x27;,
+    &#x27;#ig-unfollow-ui .badge.lock{color:#ff9f0a;background:rgba(255,159,10,.12)}&#x27;,
+    &#x27;#ig-unfollow-ui .fullname{color:#8e8e93;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}&#x27;,
+    &#x27;#ig-unfollow-ui button.uf{background:#2a2a32;color:#fff;border:0;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap}&#x27;,
+    &#x27;#ig-unfollow-ui button.uf:hover{background:#ff375f}&#x27;,
+    &#x27;#ig-unfollow-ui button.uf:disabled{opacity:.45;cursor:default}&#x27;,
+    &#x27;#ig-unfollow-ui button.uf.done{background:#1c3a2a;color:#30d158}&#x27;,
+    &#x27;#ig-unfollow-ui .btns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}&#x27;,
+    &#x27;#ig-unfollow-ui button.act{background:#ff375f;color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer}&#x27;,
+    &#x27;#ig-unfollow-ui button.act.sec{background:#2a2a32}&#x27;,
+    &#x27;#ig-unfollow-ui button.act:disabled{opacity:.45;cursor:default}&#x27;,
+    &#x27;#ig-unfollow-ui .empty{color:#636366;padding:24px 0;text-align:center}&#x27;,
+    &#x27;&lt;/style&gt;&#x27;,
+    &#x27;&lt;div class=&quot;bar&quot;&gt;&#x27;,
+    &#x27;  &lt;div class=&quot;brand&quot;&gt;&#x27;,
+    &#x27;    &lt;h1&gt;Takip etmeyenler&lt;/h1&gt;&#x27;,
+    &#x27;    &lt;div class=&quot;ads&quot;&gt;Instagram &lt;a href=&quot;https://instagram.com/okansariogluyt/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;okansariogluyt&lt;/a&gt; · Twitter &lt;a href=&quot;https://x.com/okansariogluyt&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;okansariogluyt&lt;/a&gt;&lt;/div&gt;&#x27;,
+    &#x27;  &lt;/div&gt;&#x27;,
+    &#x27;  &lt;button class=&quot;x&quot; type=&quot;button&quot; title=&quot;Kapat&quot;&gt;×&lt;/button&gt;&#x27;,
+    &#x27;&lt;/div&gt;&#x27;,
+    &#x27;&lt;div class=&quot;body&quot;&gt;&#x27;,
+    &#x27;  &lt;div class=&quot;stat&quot;&gt;&#x27;,
+    &#x27;    &lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;l&quot;&gt;Takip edilen&lt;/div&gt;&lt;div class=&quot;v&quot; id=&quot;ig-f&quot;&gt;0&lt;/div&gt;&lt;/div&gt;&#x27;,
+    &#x27;    &lt;div class=&quot;card&quot;&gt;&lt;div class=&quot;l&quot;&gt;Geri takip yok&lt;/div&gt;&lt;div class=&quot;v&quot; id=&quot;ig-n&quot;&gt;0&lt;/div&gt;&lt;/div&gt;&#x27;,
+    &#x27;  &lt;/div&gt;&#x27;,
+    &#x27;  &lt;div class=&quot;prog&quot;&gt;&lt;i id=&quot;ig-bar&quot;&gt;&lt;/i&gt;&lt;/div&gt;&#x27;,
+    &#x27;  &lt;div class=&quot;msg&quot; id=&quot;ig-msg&quot;&gt;Başlıyor…&lt;/div&gt;&#x27;,
+    &#x27;  &lt;div class=&quot;list&quot; id=&quot;ig-list&quot;&gt;&lt;/div&gt;&#x27;,
+    &#x27;  &lt;div class=&quot;btns&quot;&gt;&#x27;,
+    &#x27;    &lt;button class=&quot;act&quot; id=&quot;ig-copy&quot; type=&quot;button&quot; disabled&gt;Listeyi kopyala&lt;/button&gt;&#x27;,
+    &#x27;    &lt;button class=&quot;act sec&quot; id=&quot;ig-stop&quot; type=&quot;button&quot;&gt;Durdur&lt;/button&gt;&#x27;,
+    &#x27;  &lt;/div&gt;&#x27;,
+    &#x27;&lt;/div&gt;&#x27;
+  ].join(&#x27;&#x27;);
+  document.documentElement.appendChild(ui);
+
+  var elF = document.getElementById(&#x27;ig-f&#x27;);
+  var elN = document.getElementById(&#x27;ig-n&#x27;);
+  var elBar = document.getElementById(&#x27;ig-bar&#x27;);
+  var elMsg = document.getElementById(&#x27;ig-msg&#x27;);
+  var elList = document.getElementById(&#x27;ig-list&#x27;);
+  var btnCopy = document.getElementById(&#x27;ig-copy&#x27;);
+  var btnStop = document.getElementById(&#x27;ig-stop&#x27;);
+  var stopped = false;
+  var sonuc = [];
+
+  ui.querySelector(&#x27;.x&#x27;).onclick = function () { stopped = true; ui.remove(); };
+  btnStop.onclick = function () {
+    stopped = true;
+    elMsg.textContent = &#x27;Durduruldu.&#x27;;
+    btnStop.disabled = true;
+  };
+
+  function esc(s) {
+    return String(s == null ? &#x27;&#x27; : s)
+      .replace(/&amp;/g, &#x27;&amp;amp;&#x27;).replace(/&lt;/g, &#x27;&amp;lt;&#x27;).replace(/&gt;/g, &#x27;&amp;gt;&#x27;)
+      .replace(/&quot;/g, &#x27;&amp;quot;&#x27;).replace(/&#x27;/g, &#x27;&amp;#39;&#x27;);
+  }
+
+  function placeholderAv(username) {
+    var letter = (username || &#x27;?&#x27;).charAt(0).toUpperCase();
+    var svg = &#x27;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;88&quot; height=&quot;88&quot;&gt;&#x27; +
+      &#x27;&lt;rect width=&quot;88&quot; height=&quot;88&quot; rx=&quot;44&quot; fill=&quot;#2a2a32&quot;/&gt;&#x27; +
+      &#x27;&lt;text x=&quot;50%&quot; y=&quot;54%&quot; text-anchor=&quot;middle&quot; fill=&quot;#aeaeb2&quot; font-size=&quot;36&quot; font-family=&quot;-apple-system,sans-serif&quot; dy=&quot;.1em&quot;&gt;&#x27; +
+      letter + &#x27;&lt;/text&gt;&lt;/svg&gt;&#x27;;
+    return &#x27;data:image/svg+xml;charset=utf-8,&#x27; + encodeURIComponent(svg);
+  }
+
+  function picUrl(u) {
+    return u.profile_pic_url_hd || u.profile_pic_url || u.hd_profile_pic_url_info &amp;&amp; u.hd_profile_pic_url_info.url || &#x27;&#x27;;
+  }
+
+  function addRow(u) {
+    var row = document.createElement(&#x27;div&#x27;);
+    row.className = &#x27;row&#x27;;
+    var av = picUrl(u);
+    var verified = !!(u.is_verified);
+    var priv = !!(u.is_private);
+    var name = u.full_name || &#x27;&#x27;;
+    var badges = &#x27;&#x27;;
+    if (verified) badges += &#x27;&lt;span class=&quot;badge ver&quot; title=&quot;Onaylı&quot;&gt;✓ Onaylı&lt;/span&gt;&#x27;;
+    if (priv) badges += &#x27;&lt;span class=&quot;badge lock&quot; title=&quot;Gizli hesap&quot;&gt;🔒 Gizli&lt;/span&gt;&#x27;;
+
+    var img = document.createElement(&#x27;img&#x27;);
+    img.className = &#x27;av&#x27;;
+    img.alt = &#x27;&#x27;;
+    img.decoding = &#x27;async&#x27;;
+    img.src = placeholderAv(u.username);
+
+    function loadPic(url) {
+      return new Promise(function (resolve) {
+        if (!url) return resolve(false);
+        var done = false;
+        function finish(ok) { if (done) return; done = true; resolve(ok); }
+        img.onload = function () { finish(true); };
+        img.onerror = function () { finish(false); };
+        img.referrerPolicy = &#x27;no-referrer&#x27;;
+        img.src = url;
+      });
+    }
+
+    (async function () {
+      var url = av;
+      if (!await loadPic(url)) {
+        try {
+          var rr = await fetch(&#x27;/api/v1/users/&#x27; + u.pk + &#x27;/info/&#x27;, { headers: H, credentials: &#x27;include&#x27; });
+          if (rr.ok) {
+            var jj = await rr.json();
+            var uu = jj.user || jj;
+            url = picUrl(uu);
+            if (url) u.profile_pic_url = url;
+          }
+        } catch (e) {}
+        if (!await loadPic(url)) img.src = placeholderAv(u.username);
+      }
+    })();
+
+    var meta = document.createElement(&#x27;div&#x27;);
+    meta.className = &#x27;meta&#x27;;
+    meta.innerHTML =
+      &#x27;&lt;div class=&quot;uname&quot;&gt;&#x27; +
+      &#x27;&lt;a href=&quot;https://instagram.com/&#x27; + esc(u.username) + &#x27;/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;@&#x27; + esc(u.username) + &#x27;&lt;/a&gt;&#x27; +
+      badges +
+      &#x27;&lt;/div&gt;&#x27; +
+      (name ? &#x27;&lt;div class=&quot;fullname&quot;&gt;&#x27; + esc(name) + &#x27;&lt;/div&gt;&#x27; : &#x27;&#x27;);
+
+    var btn = document.createElement(&#x27;button&#x27;);
+    btn.className = &#x27;uf&#x27;;
+    btn.type = &#x27;button&#x27;;
+    btn.textContent = &#x27;Takibi bırak&#x27;;
+
+    row.appendChild(img);
+    row.appendChild(meta);
+    row.appendChild(btn);
+    btn.onclick = async function () {
+      btn.disabled = true;
+      btn.textContent = &#x27;…&#x27;;
+      try {
+        var fd = new FormData();
+        fd.append(&#x27;user_id&#x27;, String(u.pk));
+        fd.append(&#x27;container_module&#x27;, &#x27;profile&#x27;);
+        var r = await fetch(&#x27;/api/v1/friendships/destroy/&#x27; + u.pk + &#x27;/&#x27;, {
+          method: &#x27;POST&#x27;,
+          headers: H,
+          credentials: &#x27;include&#x27;,
+          body: fd
+        });
+        if (!r.ok) throw new Error(String(r.status));
+        btn.textContent = &#x27;Bırakıldı&#x27;;
+        btn.classList.add(&#x27;done&#x27;);
+        elMsg.textContent = &#x27;@&#x27; + u.username + &#x27; takipten çıkarıldı.&#x27;;
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = &#x27;Takibi bırak&#x27;;
+        elMsg.textContent = &#x27;Takip bırakılamadı (@&#x27; + u.username + &#x27;): &#x27; + e.message;
+      }
+    };
+    elList.appendChild(row);
+  }
+
+  var following = [], maxId = &#x27;&#x27;;
+  elMsg.textContent = &#x27;Takip listen çekiliyor…&#x27;;
+  try {
+    do {
+      if (stopped) return;
+      var url = &#x27;/api/v1/friendships/&#x27; + me + &#x27;/following/?count=200&#x27;;
+      if (maxId) url += &#x27;&amp;max_id=&#x27; + maxId;
+      var r = await fetch(url, { headers: H, credentials: &#x27;include&#x27; });
+      if (!r.ok) throw new Error(&#x27;Takip listesi alınamadı (&#x27; + r.status + &#x27;)&#x27;);
+      var j = await r.json();
+      following = following.concat(j.users || []);
+      maxId = j.next_max_id || &#x27;&#x27;;
+      elF.textContent = String(following.length);
+      elMsg.textContent = &#x27;Takip edilen: &#x27; + following.length;
+      await wait(1000);
+    } while (maxId);
+  } catch (e) {
+    elMsg.textContent = &#x27;Hata: &#x27; + e.message;
+    return;
+  }
+
+  elMsg.textContent = &#x27;Kontrol ediliyor…&#x27;;
+  for (var i = 0; i &lt; following.length; i++) {
+    if (stopped) break;
+    var u = following[i];
+    try {
+      var r2 = await fetch(&#x27;/api/v1/friendships/show/&#x27; + u.pk + &#x27;/&#x27;, { headers: H, credentials: &#x27;include&#x27; });
+      if (r2.status === 429) {
+        elMsg.textContent = &#x27;Rate limit — 60 sn bekleniyor…&#x27;;
+        await wait(60000);
+        i--;
+        continue;
+      }
+      if (!r2.ok) throw new Error(&#x27;status &#x27; + r2.status);
+      var s = await r2.json();
+      if (!s.followed_by) {
+        sonuc.push(u);
+        elN.textContent = String(sonuc.length);
+        addRow(u);
+      }
+    } catch (e) {
+      elMsg.textContent = &#x27;Uyarı: @&#x27; + u.username + &#x27; atlandı (&#x27; + e.message + &#x27;)&#x27;;
+    }
+    var pct = Math.round(((i + 1) / following.length) * 100);
+    elBar.style.width = pct + &#x27;%&#x27;;
+    elMsg.textContent = (i + 1) + &#x27; / &#x27; + following.length + &#x27; · geri takip yok: &#x27; + sonuc.length;
+    await wait(700);
+  }
+
+  if (!stopped) {
+    elMsg.textContent = &#x27;Bitti. Seni takip etmeyen: &#x27; + sonuc.length;
+    elBar.style.width = &#x27;100%&#x27;;
+  }
+  btnStop.disabled = true;
+  if (sonuc.length) {
+    btnCopy.disabled = false;
+    btnCopy.onclick = function () {
+      var t = sonuc.map(function (u) { return u.username; }).join(&#x27;\n&#x27;);
+      if (navigator.clipboard &amp;&amp; navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function () { elMsg.textContent = &#x27;Panoya kopyalandı.&#x27;; });
+      } else {
+        var ta = document.createElement(&#x27;textarea&#x27;);
+        ta.value = t;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand(&#x27;copy&#x27;);
+        ta.remove();
+        elMsg.textContent = &#x27;Panoya kopyalandı.&#x27;;
+      }
+    };
+  } else if (!stopped) {
+    elList.innerHTML = &#x27;&lt;div class=&quot;empty&quot;&gt;Hepsi seni geri takip ediyor.&lt;/div&gt;&#x27;;
+  }
+})();
+</code></pre></section>
+</main>
+<footer>Takip etmeyenler · <a href="https://instagram.com/okansariogluyt" target="_blank" rel="noopener">Instagram okansariogluyt</a> · <a href="https://x.com/okansariogluyt" target="_blank" rel="noopener">Twitter okansariogluyt</a></footer>
+<script>
+document.getElementById('copy').onclick=function(){var b=this,t=document.getElementById('code').textContent;
+function ok(){b.textContent='✅ Kopyalandı!';b.classList.add('ok');setTimeout(function(){b.textContent='📋 Kodu kopyala';b.classList.remove('ok')},2000)}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok)}else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();ok()}};
+</script></body></html>
